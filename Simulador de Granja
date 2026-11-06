@@ -8,6 +8,9 @@ Write your code in this editor and press "Run" button to compile and execute it.
 
 #include <stdio.h>
 
+// Cultivos de la Granja: Trigo, papas, zanahorias
+float dineroTotal = 100;
+
 int tableroColumnas = 7;
 int tableroFilas = 8;
 
@@ -26,7 +29,7 @@ void mostrarTablero(){
      for(int i=0; i<tableroColumnas; i++){
         printf("| %d", i + 1);
     }
-    printf("\n");
+    printf("| \n");
     
     
     for(int i=0; i<tableroFilas; i++){
@@ -36,10 +39,35 @@ void mostrarTablero(){
         printf("|\n");
     }
 }
+
+void instruccionesJuego(){
+   
+}
+
+void ponerCultivo(){
+    int menu = 1; 
+    int columna;
+    
+    printf("----- CULTIVOS DISPONIBLES -----");
+    printf("\n");
+    printf("1- Trigo : $ 10.00 = T \n");
+    printf("2- Papas : $ 15.00 = P \n");
+    printf("3- Zanahoria : $ 20.00 = Z \n");
+    printf("Dinero disponible: $ %.2f", dineroTotal);
+    do{
+        switch(menu){
+            case 1:
+            if 
+        }
+    }while(menu!=3);
+    
+    
+}
+
 int main()
 {
     inicializarTablero();
     mostrarTablero();
-
+    instruccionesJuego();
     return 0;
 }
