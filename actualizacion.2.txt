@@ -1,0 +1,261 @@
+#include <stdio.h>
+
+// Cultivos de la Granja: Trigo, papas, zanahorias
+//recursos del jugador
+float dineroTotal = 100;
+int agua=20;
+int semillas[3]={4,5,3};
+
+
+int tableroColumnas = 7;
+int tableroFilas = 8;
+int numCultivos = 3;
+
+char tablero[8][7];
+int jugador= 1;
+
+//nombre de los cultivos
+char NomCultivos[3][15]={"Trigo", "papas", "zanahorias"};
+char InicialesCultivos[]= {'T', 'P', 'Z'};
+
+//costo semillas
+int Costo[]={10, 15, 20};
+
+//tiempo de crecimiento
+int tiempoCrecimiento[]= {3,4,5};
+int diasllevados[8][7];
+
+//precio del producto cosechado
+int precio[]={30, 20, 40};
+ 
+void inicializarTablero(){
+    for(int i=0; i<tableroFilas; i++){
+        for(int j=0; j<tableroColumnas; j++){
+            tablero[i][j] = - 1;
+            diasllevados[i][j] = 0;
+        }
+    }
+}
+
+void mostrarTablero(){
+     
+    for(int i=0; i<tableroFilas; i++){
+        for(int j=0; j<tableroColumnas; j++){
+            if(tablero[i][j]== - 1){
+        printf("|                    |");
+        }else{int tipo= tablero[i][j];
+        printf("| %c- %d de %d dias  |\t", InicialesCultivos[tipo], diasllevados[i][j],tiempoCrecimiento[tipo]);
+    }
+}
+printf("\n");
+
+}
+}
+
+
+
+
+
+void ponerCultivo(){
+    
+    int columna, fila, tipo;
+    
+    printf("Que semilla quieres cultivar?\n");
+    for (int i = 0; i < numCultivos; i++) {
+        printf("%d %s ---- Costo: $%d)\n", i, NomCultivos[i], Costo[i]);
+    }
+    
+    printf("Cultivo: ");
+    scanf("%d", &tipo);
+    
+    if (tipo < 0 || tipo >= numCultivos) {
+        printf("Cultivo inválido\n");
+        return;
+        
+        
+    }
+    
+    //semillas y dinero
+    if(dineroTotal< Costo[tipo] || semillas[tipo] <= 0){
+        printf("No tienes suficiente dinero o no tienes semillas\n");
+        return;
+    }
+    
+       printf("Ingresa donde quieres cultivar la semilla (columna del 0-%d) (fila 0-%d)", tableroColumnas - 1, tableroFilas - 1);
+           scanf("%d %d", &columna, &fila);
+           
+    // Validar la columna ingresada
+    if(columna < 0 || columna >= tableroColumnas || fila < 0 || fila >= tableroFilas){
+        printf("Terreno inexistente. Intenta de nuevo\n");
+        return;
+    }
+    
+    if(tablero[fila][columna] != - 1){
+        
+        printf("El terreno esta ocupado\n");
+        return;
+    }
+        
+        
+        //actualizar pantalla
+        
+        tablero[fila][columna] = tipo;
+    diasllevados[fila][columna] = 0;
+    dineroTotal -= Costo[tipo];
+    semillas[tipo]--;
+    printf("Has plantado la semilla\n");
+        
+       
+    
+
+}
+
+void regar(){
+    
+    int fila, columna;
+    
+    printf("Escribe el terreno (columna y fila en donde quieres regar):  ");
+    scanf("%d %d", &columna, &fila);
+    
+    if(columna < 0 || columna >= tableroColumnas || fila < 0 || fila >= tableroFilas){
+        printf("Terreno invalido.\n");
+        return;
+    }
+    
+    if(agua <= 0){
+        printf("No tienes suficiente agua\n");
+        return;
+    }
+    
+    
+    agua--;
+    diasllevados[fila][columna]++; // Aumenta un día de crecimiento al regar
+    printf("Has regado el terreno.\n");
+    
+}
+
+
+void cosechar(){
+    
+    int fila, columna;
+    
+    printf("Ingresa el terreno (columna y fila que deseas cosechar):  ");
+    scanf("%d %d", &columna, &fila);
+    
+     if(columna < 0 || columna >= tableroColumnas || fila < 0 || fila >= tableroFilas) {
+        printf("Terreno invalido.\n");
+        return;
+    }
+    
+    
+    int tipo = tablero[fila][columna];
+    if(tipo == -1) {
+        printf("Esta vacio, no hay nada que cosechar.\n");
+        return;
+    }
+    
+    if(diasllevados[fila][columna] < tiempoCrecimiento[tipo]) {
+        printf("No esta listo. Aun no puedes cosecharlo\n");
+        return;
+    }
+    
+    int ganancia = precio[tipo];
+    
+    dineroTotal += ganancia;
+    printf("Has vendido la cosecha y ganaste $%d.\n", ganancia);
+ 
+    //liberar el terreno al vender
+    tablero[fila][columna] = -1;
+    diasllevados[fila][columna] = 0;
+    
+}
+
+
+void pasarDedia(){
+    
+    agua += 2; // Recarga un poco de agua al pasar el día
+    semillas[0] += 1;
+    semillas[1] += 1;
+    semillas[2] += 1;
+    printf("Reabasteciste tus suministros. Ganaste +1 semilla +3 de agua.\n");
+    
+}
+
+
+
+
+ void recursos(){
+     
+  printf("\n");
+
+    printf("----- CULTIVOS DISPONIBLES -----");
+    printf("\n");
+    printf("1- Trigo : $ 10.00 = T \n");
+    printf("2- Papas : $ 15.00 = P \n");
+    printf("3- Zanahoria : $ 20.00 = Z \n");
+    printf("\n");
+    printf("Dinero disponible: $ %.2f\t", dineroTotal);
+    printf("Agua disponible: %d unidades\t", agua);
+    printf("Semillas disponibles: T- %d | P- %d | Z-%d\n", semillas[0],semillas[1],semillas[2]);
+    
+ }
+    
+    
+    
+    
+    
+
+
+int main()
+{
+    int menu = 1; 
+
+    inicializarTablero();
+
+    do{
+        mostrarTablero();
+        recursos();
+        printf("\n");
+
+        printf("Que quieres hacer?\n");
+        printf("\n");
+        
+        printf("1- CULTIVAR\t");
+        printf("2- REGAR\t");
+        printf("3- COSECHAR\t");
+        printf("4- PASAR AL DIA SIGUIENTE\t");
+        printf("5- SALIR DEL JUEGO\n");
+
+        scanf("%d", &menu);
+        
+        switch(menu){
+            case 1:
+            ponerCultivo();
+            break;
+            
+            case 2:
+            regar();
+            break;
+
+            case 3:
+            cosechar();
+             break;
+
+            case 4:
+            pasarDedia();
+            break;
+            
+            case 5:
+            printf("Saliste del juego\n");
+            break;
+
+            default:
+            printf("Opcion invalida\n");
+             
+        }
+    }while(menu!=5);
+    
+    
+   
+    return 0;
+}
